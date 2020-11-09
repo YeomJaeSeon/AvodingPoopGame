@@ -2,21 +2,27 @@
 
 const gameBtn = document.querySelector(".game__button");
 const field = document.querySelector(".game__field");
+const fieldRect = field.getBoundingClientRect();
 
 let human = undefined;
 
 let started = false;
 let poopTimer = undefined;
 
-//사람 이동함.~
+let humanPosition = 0; // 사람 현재 위치
+
+//사람 이동구현
 window.addEventListener("keydown", (event) => {
   if (!started) return;
-  // const humanPosition = human.getBoundingClientRect().left;
-  console.log(human.style.left);
+
   if (event.key === "ArrowRight") {
-    console.log("오른쪾이동");
+    if (human.getBoundingClientRect().right > fieldRect.right) return;
+    humanPosition += 20;
+    human.style.transform = `translateX(${humanPosition}px)`;
   } else if (event.key === "ArrowLeft") {
-    console.log("왼쪽이동");
+    if (human.getBoundingClientRect().left < fieldRect.left) return;
+    humanPosition -= 20;
+    human.style.transform = `translateX(${humanPosition}px)`;
   }
 });
 
@@ -47,9 +53,7 @@ function addHuman() {
   img.style.position = "absolute";
   img.style.bottom = "0px";
   field.appendChild(img);
-
   human = document.querySelector(".human");
-  // console.log(human.style.left);
 }
 
 function rainPoop() {}
