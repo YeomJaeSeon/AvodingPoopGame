@@ -9,10 +9,13 @@ const field = document.querySelector(".game__field");
 const fieldRect = field.getBoundingClientRect();
 
 let human = undefined;
-let poop = undefined;
+// let poop = undefined;
 
 let started = false;
-let poopTimer = undefined;
+let poopTimer = ["poop"]; // 모든똥에대한 타이머를가지고있는
+//배열
+
+let poopTotalTimer = undefined;
 
 let humanPosition = 0; // 사람 현재 위치
 
@@ -22,11 +25,11 @@ window.addEventListener("keydown", (event) => {
 
   if (event.key === "ArrowRight") {
     if (human.getBoundingClientRect().right > fieldRect.right) return;
-    humanPosition += 20;
+    humanPosition += 10;
     human.style.transform = `translateX(${humanPosition}px)`;
   } else if (event.key === "ArrowLeft") {
     if (human.getBoundingClientRect().left < fieldRect.left) return;
-    humanPosition -= 20;
+    humanPosition -= 10;
     human.style.transform = `translateX(${humanPosition}px)`;
   }
 });
@@ -47,11 +50,12 @@ function startGame() {
 function stopGame() {
   started = false;
   hideGameBtn();
+  stopPoop();
 }
 
 function init() {
   addHuman();
-  rainPoop();
+  displayTotalPoop();
 }
 function changeGameBtn() {
   const gameBtn = document.querySelector(".fas");
@@ -81,20 +85,39 @@ function addPoop() {
   img.style.left = `${getRandom(0, fieldRect.width - POOPSIZE)}px`;
   img.style.top = "0px";
   game.appendChild(img);
-  poop = document.querySelector(".poop");
+  return document.querySelectorAll(".poop");
 }
 
-function rainPoop() {
+function movePoop(poop, time, poopTimer) {
   let poopPosition = 0;
-  addPoop();
   poopTimer = setInterval(() => {
-    if (poop.getBoundingClientRect().bottom > fieldRect.bottom + 20) {
-      return;
+    if (poop.getBoundingClientRect().bottom > fieldRect.bottom + POOPSIZE) {
+      clearInterval(poopTimer);
     }
-    console.log("똥비내려");
-    poopPosition += 50;
+    poopPosition += 20;
     poop.style.transform = `translateY(${poopPosition}px)`;
-  }, 1000);
+  }, time);
+}
+
+function stopPoop() {
+  poopTimer.forEach((timer) => {
+    clearInterval(timer);
+  });
+  clearInterval(poopTotalTimer);
+}
+
+//하나의 타이머와 하나의 똥에관한 함수
+function displayOnePoop(poopTimer, poop) {
+  movePoop(poop, getRandom(100, 1000), poopTimer);
+}
+function displayTotalPoop() {
+  let i = 0;
+  poopTotalTimer = setInterval(() => {
+    displayOnePoop(poopTimer[i], addPoop()[i]);
+    //똥의 timer와 똥하나를 전달
+    poopTimer.push("poop");
+    ++i;
+  }, getRandom(100, 2000));
 }
 
 function getRandom(min, max) {
