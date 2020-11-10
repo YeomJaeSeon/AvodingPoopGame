@@ -57,11 +57,13 @@ function init() {
   addHuman();
   displayTotalPoop();
 }
+
 function changeGameBtn() {
   const gameBtn = document.querySelector(".fas");
   gameBtn.classList.remove("fa-play");
   gameBtn.classList.add("fa-stop");
 }
+
 function hideGameBtn() {
   gameBtn.style.visibility = "hidden";
 }
@@ -88,14 +90,14 @@ function addPoop() {
   return document.querySelectorAll(".poop");
 }
 
-function movePoop(poop, time, poopTimer) {
+function movePoop(poop, time, poopTimer, i) {
   let poopPosition = 0;
-  poopTimer = setInterval(() => {
-    if (poop.getBoundingClientRect().bottom > fieldRect.bottom + POOPSIZE) {
+  poopTimer[i] = setInterval(() => {
+    if (poop[i].getBoundingClientRect().bottom > fieldRect.bottom + POOPSIZE) {
       clearInterval(poopTimer);
     }
     poopPosition += 20;
-    poop.style.transform = `translateY(${poopPosition}px)`;
+    poop[i].style.transform = `translateY(${poopPosition}px)`;
   }, time);
 }
 
@@ -107,14 +109,15 @@ function stopPoop() {
 }
 
 //하나의 타이머와 하나의 똥에관한 함수
-function displayOnePoop(poopTimer, poop) {
-  movePoop(poop, getRandom(100, 1000), poopTimer);
+function displayOnePoop(poopTimer, poop, i) {
+  movePoop(poop, getRandom(100, 1000), poopTimer, i);
 }
+
 function displayTotalPoop() {
   let i = 0;
   poopTotalTimer = setInterval(() => {
-    displayOnePoop(poopTimer[i], addPoop()[i]);
-    //똥의 timer와 똥하나를 전달
+    displayOnePoop(poopTimer, addPoop(), i);
+    //똥 timer배열자체와 똥 element배열자체와 식별자 i를전달
     poopTimer.push("poop");
     ++i;
   }, getRandom(100, 2000));
