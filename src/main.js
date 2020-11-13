@@ -1,4 +1,5 @@
 'use strict';
+import Popup from './popup.js';
 
 const STOP_REASON = Object.freeze({
   stop: 'stop',
@@ -6,7 +7,6 @@ const STOP_REASON = Object.freeze({
 });
 
 const POOPSIZE = 40;
-const HUMANSIZE = 60;
 
 const game = document.querySelector('.game');
 
@@ -17,12 +17,7 @@ const gameScore = document.querySelector('.game__score');
 const field = document.querySelector('.game__field');
 const fieldRect = field.getBoundingClientRect();
 
-const popup = document.querySelector('.popup');
-const popupMessage = document.querySelector('.popup__message');
-const popupBtn = document.querySelector('.popup__refresh');
-
 let human = undefined;
-// let poop = undefined;
 
 let started = false;
 let timer = undefined;
@@ -32,10 +27,10 @@ let poopTotalTimer = undefined;
 let humanPosition = 0; // 사람 현재 위치
 let score = 0;
 
-popupBtn.addEventListener('click', () => {
+const finishGameBanner = new Popup();
+finishGameBanner.onStopListener(() => {
   removeElements();
   startGame();
-  hidePopUp();
   showGameBtn();
 });
 
@@ -76,10 +71,10 @@ function stopGame(reason) {
   stopGameTimer();
   switch (reason) {
     case STOP_REASON.stop:
-      showPopupwithMessage('REPLAY??');
+      finishGameBanner.showPopupwithMessage('REPLAY??');
       break;
     case STOP_REASON.lose:
-      showPopupwithMessage(`SCORE : ${score}`);
+      finishGameBanner.showPopupwithMessage(`SCORE : ${score}`);
       break;
     default:
       throw new Error('NO EXIST');
@@ -91,13 +86,6 @@ function removeElements() {
     poop.remove();
   });
   human.remove();
-}
-function showPopupwithMessage(Msg) {
-  popup.style.visibility = 'visible';
-  popupMessage.innerText = Msg;
-}
-function hidePopUp() {
-  popup.style.visibility = 'hidden';
 }
 
 function init() {
