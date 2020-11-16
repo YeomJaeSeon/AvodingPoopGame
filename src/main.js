@@ -30,22 +30,6 @@ finishGameBanner.onStopListener(() => {
 });
 
 const gameUser = new Human(() => started);
-// gameUser.onGameListener()
-
-//사람 이동구현
-// window.addEventListener('keydown', (event) => {
-//   if (!started) return;
-
-//   if (event.key === 'ArrowRight') {
-//     if (human.getBoundingClientRect().right > fieldRect.right) return;
-//     humanPosition += 10;
-//     human.style.transform = `translateX(${humanPosition}px)`;
-//   } else if (event.key === 'ArrowLeft') {
-//     if (human.getBoundingClientRect().left < fieldRect.left) return;
-//     humanPosition -= 10;
-//     human.style.transform = `translateX(${humanPosition}px)`;
-//   }
-// });
 
 gameBtn.addEventListener('click', () => {
   if (!started) {
