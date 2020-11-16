@@ -1,5 +1,6 @@
 'use strict';
 import Popup from './popup.js';
+import Human from './human.js';
 
 const STOP_REASON = Object.freeze({
   stop: 'stop',
@@ -14,17 +15,11 @@ const gameBtn = document.querySelector('.game__button');
 const gameTimer = document.querySelector('.game__timer');
 const gameScore = document.querySelector('.game__score');
 
-const field = document.querySelector('.game__field');
-const fieldRect = field.getBoundingClientRect();
-
-let human = undefined;
-
 let started = false;
 let timer = undefined;
 let poopTimer = ['poop']; // 모든똥에대한 타이머를가지고있는 배열
 let poopTotalTimer = undefined;
 
-let humanPosition = 0; // 사람 현재 위치
 let score = 0;
 
 const finishGameBanner = new Popup();
@@ -34,20 +29,23 @@ finishGameBanner.onStopListener(() => {
   showGameBtn();
 });
 
-//사람 이동구현
-window.addEventListener('keydown', (event) => {
-  if (!started) return;
+const gameUser = new Human(() => started);
+// gameUser.onGameListener()
 
-  if (event.key === 'ArrowRight') {
-    if (human.getBoundingClientRect().right > fieldRect.right) return;
-    humanPosition += 10;
-    human.style.transform = `translateX(${humanPosition}px)`;
-  } else if (event.key === 'ArrowLeft') {
-    if (human.getBoundingClientRect().left < fieldRect.left) return;
-    humanPosition -= 10;
-    human.style.transform = `translateX(${humanPosition}px)`;
-  }
-});
+//사람 이동구현
+// window.addEventListener('keydown', (event) => {
+//   if (!started) return;
+
+//   if (event.key === 'ArrowRight') {
+//     if (human.getBoundingClientRect().right > fieldRect.right) return;
+//     humanPosition += 10;
+//     human.style.transform = `translateX(${humanPosition}px)`;
+//   } else if (event.key === 'ArrowLeft') {
+//     if (human.getBoundingClientRect().left < fieldRect.left) return;
+//     humanPosition -= 10;
+//     human.style.transform = `translateX(${humanPosition}px)`;
+//   }
+// });
 
 gameBtn.addEventListener('click', () => {
   if (!started) {
@@ -85,14 +83,14 @@ function removeElements() {
   poops.forEach((poop) => {
     poop.remove();
   });
-  human.remove();
+  gameUser.human.remove();
 }
 
 function init() {
   score = 0;
   upDateScoreBoard();
-  humanPosition = 0;
-  addHuman();
+  gameUser.humanPosition = 0;
+  gameUser.addHuman();
   displayTotalPoop();
 }
 function startGameTimer() {
@@ -123,23 +121,12 @@ function showGameBtn() {
   gameBtn.style.visibility = 'visible';
 }
 
-function addHuman() {
-  const img = document.createElement('img');
-  img.setAttribute('src', 'imgs/human.png');
-  img.setAttribute('class', 'human');
-  img.style.position = 'absolute';
-  img.style.bottom = '0px';
-  field.appendChild(img);
-  img.style.left = '225px';
-  human = document.querySelector('.human');
-}
-
 function addPoop() {
   const img = document.createElement('img');
   img.setAttribute('src', 'imgs/poop.png');
   img.setAttribute('class', 'poop');
   img.style.position = 'absolute';
-  img.style.left = `${getRandom(0, fieldRect.width - POOPSIZE)}px`;
+  img.style.left = `${getRandom(0, gameUser.fieldRect.width - POOPSIZE)}px`;
   img.style.top = '0px';
   game.appendChild(img);
   return document.querySelectorAll('.poop');
@@ -152,7 +139,10 @@ function movePoop(poop, poopTimer, i) {
   let poopPosition = 0;
   let times = 0; // 최초만 실행하기위해서
   poopTimer[i] = setInterval(() => {
-    if (poop[i].getBoundingClientRect().bottom > fieldRect.bottom + 20) {
+    if (
+      poop[i].getBoundingClientRect().bottom >
+      gameUser.fieldRect.bottom + 20
+    ) {
       if (times !== 0) return;
       clearInterval(poopTimer);
       score += 100;
@@ -165,12 +155,12 @@ function movePoop(poop, poopTimer, i) {
     // 똥과 사람이 부딪힘 -> 게임질경우
     if (
       poop[i].getBoundingClientRect().bottom - 13 >=
-        human.getBoundingClientRect().top &&
-      fieldRect.bottom > poop[i].getBoundingClientRect().bottom &&
+        gameUser.human.getBoundingClientRect().top &&
+      gameUser.fieldRect.bottom > poop[i].getBoundingClientRect().bottom &&
       poop[i].getBoundingClientRect().right - 35 >
-        human.getBoundingClientRect().left &&
+        gameUser.human.getBoundingClientRect().left &&
       poop[i].getBoundingClientRect().left + 35 <
-        human.getBoundingClientRect().right
+        gameUser.human.getBoundingClientRect().right
     ) {
       stopGame(STOP_REASON.lose);
     }
