@@ -7,15 +7,18 @@ export default class Human {
     this.humanPosition = 0; // 사람 현재 위치
     this.field = document.querySelector('.game__field');
     this.fieldRect = this.field.getBoundingClientRect();
-    window.addEventListener('keydown', (event) => {
+    document.addEventListener('keydown', (event) => {
       if (!isGameRunning()) return;
       if (event.key === 'ArrowRight') {
-        if (this.human.getBoundingClientRect().right > this.fieldRect.right)
+        if (
+          this.human.getBoundingClientRect().right - 20 >
+          this.fieldRect.right
+        )
           return;
         this.humanPosition += 10;
         this.human.style.transform = `translateX(${this.humanPosition}px)`;
       } else if (event.key === 'ArrowLeft') {
-        if (this.human.getBoundingClientRect().left < this.fieldRect.left)
+        if (this.human.getBoundingClientRect().left + 20 < this.fieldRect.left)
           return;
         this.humanPosition -= 10;
         this.human.style.transform = `translateX(${this.humanPosition}px)`;

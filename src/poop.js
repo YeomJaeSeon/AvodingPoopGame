@@ -1,22 +1,21 @@
 const POOPSIZE = 40;
 
 export default class Poop {
-  constructor(gameUser) {
+  constructor(gameUser, game) {
     this.gameUser = gameUser;
+    this.game = game;
     this.poopTimer = ['poop']; // 모든똥에대한 타이머를가지고있는 배열
     this.poopTotalTimer = undefined;
   }
-  onGameListener(onGame) {
-    this.onGame = onGame;
-  }
-  onFinishListener(onFinish) {
-    this.onFinish = onFinish;
+
+  onScoreListener(onScore) {
+    this.onScore = onScore;
   }
   onStopListener(onStop) {
     this.onStop = onStop;
   }
 
-  addPoop() {
+  addPoop = () => {
     const img = document.createElement('img');
     img.setAttribute('src', 'imgs/poop.png');
     img.setAttribute('class', 'poop');
@@ -26,9 +25,9 @@ export default class Poop {
       this.gameUser.fieldRect.width - POOPSIZE
     )}px`;
     img.style.top = '0px';
-    this.onGame && this.onGame(img);
+    this.game.appendChild(img);
     return document.querySelectorAll('.poop');
-  }
+  };
 
   movePoop(poop, poopTimer, i) {
     let poopPosition = 0;
@@ -40,7 +39,7 @@ export default class Poop {
       ) {
         if (times !== 0) return;
         clearInterval(poopTimer);
-        this.onFinish && this.onFinish();
+        this.onScore && this.onScore();
         ++times;
       }
       poopPosition += 10;
