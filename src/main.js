@@ -2,14 +2,19 @@
 import Popup from './popup.js';
 import Game from './game.js';
 
+const STOP_REASON = Object.freeze({
+  stop: 'stop',
+  lose: 'lose',
+});
+
 const finishGameBanner = new Popup();
 const game = new Game();
 game.onStopListener((reason) => {
   switch (reason) {
-    case 'stop':
+    case STOP_REASON.stop:
       finishGameBanner.showPopupwithMessage('REPLAY??');
       break;
-    case 'lose':
+    case STOP_REASON.lose:
       finishGameBanner.showPopupwithMessage(`SCORE : ${game.score}`);
       break;
     default:

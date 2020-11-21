@@ -45,7 +45,6 @@ export default class Game {
     this.changeGameBtn();
     this.startGameTimer();
   }
-  //게임 사용자가 멈출경우, 게임이 져서 멈출경우 두경우 존재
   stopGame(reason) {
     this.started = false;
     this.hideGameBtn();
@@ -54,11 +53,9 @@ export default class Game {
     switch (reason) {
       case STOP_REASON.stop:
         this.onStop && this.onStop(STOP_REASON.stop);
-        // finishGameBanner.showPopupwithMessage('REPLAY??');
         break;
       case STOP_REASON.lose:
         this.onStop && this.onStop(STOP_REASON.lose);
-        // finishGameBanner.showPopupwithMessage(`SCORE : ${score}`);
         break;
       default:
         throw new Error('NO EXIST');
