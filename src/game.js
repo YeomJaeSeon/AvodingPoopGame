@@ -1,12 +1,12 @@
 import Human from './human.js';
 import Poop from './poop.js';
 
-const STOP_REASON = Object.freeze({
+export const STOP_REASON = Object.freeze({
   stop: 'stop',
   lose: 'lose',
 });
 
-export default class Game {
+export class Game {
   constructor() {
     this.gameBtn = document.querySelector('.game__button');
     this.gameTimer = document.querySelector('.game__timer');

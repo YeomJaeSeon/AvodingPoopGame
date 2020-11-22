@@ -35,14 +35,14 @@ export default class Poop {
     poopTimer[i] = setInterval(() => {
       if (
         poop[i].getBoundingClientRect().bottom >
-        this.gameUser.fieldRect.bottom + 20
+        this.gameUser.fieldRect.bottom + 30
       ) {
         if (times !== 0) return;
         clearInterval(poopTimer);
         this.onScore && this.onScore();
         ++times;
       }
-      poopPosition += 10;
+      poopPosition += 5;
       poop[i].style.transform = `translateY(${poopPosition}px)`;
 
       // 똥과 사람이 부딪힘 -> 게임질경우
@@ -58,7 +58,7 @@ export default class Poop {
       ) {
         this.onStop && this.onStop();
       }
-    }, getRandom(50, 300));
+    }, getRandom(10, 200));
   }
 
   stopPoop() {

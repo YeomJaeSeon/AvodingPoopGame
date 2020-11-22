@@ -1,11 +1,6 @@
 'use strict';
 import Popup from './popup.js';
-import Game from './game.js';
-
-const STOP_REASON = Object.freeze({
-  stop: 'stop',
-  lose: 'lose',
-});
+import { STOP_REASON, Game } from './game.js';
 
 const finishGameBanner = new Popup();
 const game = new Game();
